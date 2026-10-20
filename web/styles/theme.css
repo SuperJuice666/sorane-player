@@ -43,6 +43,9 @@
   .word.playing {
     background: #2b4738;
   }
+  .translation {
+    color: var(--muted);
+  }
   .line-button:hover,
   .line-button.in-range,
   .line-button.range-start {
