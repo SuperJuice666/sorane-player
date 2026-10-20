@@ -46,12 +46,11 @@
   .translation {
     color: var(--muted);
   }
-  .line-button:hover,
   .line-button.in-range,
   .line-button.range-start {
     background: #24382e;
   }
-  .line-button.current:hover {
+  .lyrics-sheet .line-button.current:hover {
     background: #9ed2bb;
   }
   .selection-empty button {
@@ -60,5 +59,33 @@
   .catalog-sheet::backdrop,
   .lyrics-sheet::backdrop {
     background: #0009;
+  }
+  .play-button:hover,
+  .play-button:active {
+    background: #9ed2bb;
+    color: #12261d;
+  }
+  .play-button[aria-busy='true']:hover {
+    background: #77aa92;
+  }
+  .round-button:hover,
+  .round-button:active,
+  .restart:hover,
+  .restart:active {
+    background: #36473d;
+    color: var(--ink);
+  }
+  .quiet-button.active {
+    background: #9ed2bb;
+    color: #12261d;
+  }
+  .lyrics-sheet .line-button.in-range:not(.current):hover,
+  .lyrics-sheet .line-button.range-start:not(.current):hover {
+    background: #24382e;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .lyrics-sheet .line-button:hover:not(.current) {
+      background: #24382e;
+    }
   }
 }

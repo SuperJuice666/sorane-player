@@ -106,6 +106,15 @@ export function createSongPicker(library) {
         (tab !== 'favorites' || favorites.has(s.id)) &&
         query.every((q) => normalize(s.title + ' ' + s.artist).includes(q)),
     );
+    const byName = new Intl.Collator('ja', { numeric: true, sensitivity: 'base' });
+    const favoriteOrder = new Map([...favorites].map((id, index) => [id, index]));
+    matches.sort((a, b) =>
+      tab === 'favorites'
+        ? favoriteOrder.get(b.id) - favoriteOrder.get(a.id)
+        : byName.compare(a.title, b.title) ||
+          byName.compare(a.artist, b.artist) ||
+          a.id.localeCompare(b.id),
+    );
     if (!matches.length) {
       const favoriteView = tab === 'favorites',
         box = el('div', undefined, 'catalog-empty');
