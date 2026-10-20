@@ -1,0 +1,61 @@
+:root {
+  color-scheme: light;
+}
+.awaiting-song .workspace {
+  flex: 1;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #171c19;
+    --ink: #e6eae5;
+    --muted: #a6b0a9;
+    --line: #333d37;
+    --green: #9ed2bb;
+    --green-light: #24382e;
+  }
+  .scope-switch,
+  .mode-tabs,
+  .speed-buttons,
+  .round-button,
+  .restart {
+    background: #252e28;
+  }
+  .mode-tabs button.active,
+  .speed-buttons button.selected {
+    background: #36473d;
+  }
+  .play-button,
+  .scope-switch button[aria-pressed='true'],
+  .line-button.current,
+  .catalog-search button[type='submit'],
+  .catalog-guide-action {
+    background: #9ed2bb;
+    color: #12261d;
+  }
+  .play-button[aria-busy='true'] {
+    background: #77aa92;
+  }
+  .line-button.current .index,
+  .line-button.current::after {
+    color: #12261d;
+  }
+  .word.playing {
+    background: #2b4738;
+  }
+  .line-button:hover,
+  .line-button.in-range,
+  .line-button.range-start {
+    background: #24382e;
+  }
+  .line-button.current:hover {
+    background: #9ed2bb;
+  }
+  .selection-empty button {
+    border-color: #52695a;
+  }
+  .catalog-sheet::backdrop,
+  .lyrics-sheet::backdrop {
+    background: #0009;
+  }
+}

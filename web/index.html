@@ -3,11 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#fafaf8" />
+    <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171c19" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <title>Sorane Player · 歌词练习</title>
     <link rel="stylesheet" href="fonts/serif-jp.css" />
     <link rel="stylesheet" href="styles/app.css" />
     <link rel="stylesheet" href="styles/library.css" />
+    <link rel="stylesheet" href="styles/theme.css" />
   </head>
   <body>
     <header class="topbar">
@@ -31,13 +34,9 @@
             >
               <path d="m6 9 6 6 6-6" />
             </svg></button
-          ><select
-            id="song-select"
-            aria-label="选择歌曲"
-            hidden
-            aria-hidden="true"
-            tabindex="-1"
-          ></select>
+          ><select id="song-select" aria-label="选择歌曲" hidden aria-hidden="true" tabindex="-1">
+            <option value="" disabled>选择歌曲</option>
+          </select>
         </h1>
         <button
           id="open-lyrics"
@@ -109,8 +108,8 @@
       </dialog>
       <section class="workspace">
         <div id="selection-empty" class="selection-empty">
-          <button id="choose-lyrics" type="button">选择歌词</button>
-          <p id="selection-caption">从右上角歌词选择练习句</p>
+          <button id="choose-lyrics" type="button">选择歌曲</button>
+          <p id="selection-caption">从歌曲列表中选择一首歌，开始练习</p>
         </div>
         <article id="lesson" hidden class="lesson" aria-label="当前歌词练习">
           <div class="lesson-top">
@@ -130,7 +129,7 @@
         </article>
       </section>
     </main>
-    <section id="player" class="player" aria-label="音频播放器">
+    <section id="player" hidden class="player" aria-label="音频播放器">
       <div class="practice-options" id="practice-options">
         <label><input id="next-line-toggle" type="checkbox" checked />显示下句</label
         ><label title="至少8个字母且5拍的读音分拍，短词保持连写；· 表示促音停顿一拍"

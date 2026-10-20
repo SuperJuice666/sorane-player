@@ -20,12 +20,14 @@ export function createPlayer({ songs, cache, decoder }) {
       mixer: vocalMixer,
       createChunkedSession: decoder.createSession,
     });
-  let lesson = library[0],
-    lines = lesson.lines;
+  let savedSongId = null;
   try {
-    lesson = library.find((s) => s.id === localStorage.getItem('lyrics-song')) || lesson;
-    lines = lesson.lines;
+    savedSongId = localStorage.getItem('lyrics-song');
   } catch {}
+  const initialSong = linkedSong || library.find((song) => song.id === savedSongId);
+  let awaitingSong = !initialSong;
+  let lesson = initialSong || library[0],
+    lines = lesson.lines;
 
   const preferenceKey = () => 'lyrics-practice-' + lesson.id;
   for (const song of library) {
@@ -34,10 +36,10 @@ export function createPlayer({ songs, cache, decoder }) {
     option.textContent = song.title + ' · ' + song.artist;
     $('song-select').append(option);
   }
-  $('song-select').value = lesson.id;
+  $('song-select').value = awaitingSong ? '' : lesson.id;
   $('song-select').disabled = !!linkedSong;
   document.documentElement.classList.toggle('single-song', !!linkedSong);
-  document.title = lesson.title + ' · 歌词练习';
+  document.title = awaitingSong ? 'Sorane Player · 歌词练习' : lesson.title + ' · 歌词练习';
   const { renderTranslation, renderNextLine, renderJapanese, displayRomaji } = createLyricsView({
     current: () => lines[state.index],
     next: () => (state.segment && state.index >= state.rangeEnd ? null : lines[state.index + 1]),
@@ -146,6 +148,7 @@ export function createPlayer({ songs, cache, decoder }) {
   };
   let restorePracticeSource = false;
   function savePreferences() {
+    if (awaitingSong) return;
     try {
       localStorage.setItem('lyrics-song', lesson.id);
       localStorage.setItem(
@@ -232,6 +235,10 @@ export function createPlayer({ songs, cache, decoder }) {
     balanceLyrics($('tokens'));
   }
   function renderSelection() {
+    if (awaitingSong) {
+      showSongPrompt();
+      return;
+    }
     const pending = !!pendingPracticeScope;
     $('lesson').hidden = pending;
     $('selection-empty').hidden = !pending;
@@ -457,7 +464,9 @@ export function createPlayer({ songs, cache, decoder }) {
     loadAudio({ resume });
     savePreferences();
   }
-  $('choose-lyrics').addEventListener('click', () => openLyrics());
+  $('choose-lyrics').addEventListener('click', () =>
+    awaitingSong ? $('open-songs').click() : openLyrics(),
+  );
   $('open-lyrics').addEventListener('click', openLyrics);
   $('close-lyrics').addEventListener('click', closeLyrics);
   drawer.addEventListener('close', () => {
@@ -1171,7 +1180,7 @@ export function createPlayer({ songs, cache, decoder }) {
     )
       return;
     e.preventDefault();
-    if (pendingPracticeScope) return;
+    if (awaitingSong || pendingPracticeScope) return;
     if (e.repeat && (key === 'Space' || key === 'KeyR')) return;
     const control = { Space: 'play', ArrowLeft: 'prev', ArrowRight: 'next', KeyR: 'restart' }[key];
     if (control) {
@@ -1197,12 +1206,19 @@ export function createPlayer({ songs, cache, decoder }) {
     $('song-select').blur?.();
   });
   $('song-select').addEventListener('change', () => {
+    const selected = library.find((song) => song.id === $('song-select').value);
+    if (!selected) return;
     const scope =
       pendingPracticeScope || (state.segment ? 'section' : state.full ? 'full' : 'line');
     savePreferences();
     pausePlayback();
     state.playGeneration++;
-    lesson = library.find((s) => s.id === $('song-select').value);
+    awaitingSong = false;
+    document.documentElement.classList.remove('awaiting-song');
+    $('player').hidden = false;
+    $('open-lyrics').disabled = false;
+    $('choose-lyrics').textContent = '选择歌词';
+    lesson = selected;
     lines = lesson.lines;
     state.index = 0;
     state.inGap = false;
@@ -1226,6 +1242,15 @@ export function createPlayer({ songs, cache, decoder }) {
     status('');
     savePreferences();
   });
+  function showSongPrompt() {
+    document.documentElement.classList.add('awaiting-song');
+    $('lesson').hidden = true;
+    $('player').hidden = true;
+    $('open-lyrics').disabled = true;
+    $('selection-empty').hidden = false;
+    $('choose-lyrics').textContent = '选择歌曲';
+    $('selection-caption').textContent = '从歌曲列表中选择一首歌，开始练习';
+  }
   function initializePlayer() {
     // Reload settings only. Lyrics, ranges and playback positions start fresh.
     state.index = 0;
@@ -1237,6 +1262,11 @@ export function createPlayer({ songs, cache, decoder }) {
     restorePracticeSource = false;
     state.mode = 'song';
     pendingPracticeScope = null;
+    if (awaitingSong) {
+      showSongPrompt();
+      return;
+    }
+    $('player').hidden = false;
     renderList();
     renderLine();
     loadAudio();

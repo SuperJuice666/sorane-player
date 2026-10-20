@@ -1,5 +1,7 @@
 # Sorane Player
 
+[更新日志](CHANGELOG.md)
+
 日语歌词练习播放器。支持全曲、逐句、逐段循环，原曲与读音、三档速度、人声音量、假名、译文、本地收藏。
 
 播放器读取歌曲包，提供同步歌词、循环练习和读音辅助。制作歌曲包使用关联项目 [Sorane Studio](https://github.com/SuperJuice666/sorane-studio)。两者独立运行，以 [schemaVersion 1](docs/data-format.md) 交换数据。
