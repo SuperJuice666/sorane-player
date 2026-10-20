@@ -1,0 +1,22 @@
+[project]
+name = "sorane-player"
+version = "0.1.0"
+description = "Practice Japanese songs with synchronized lyrics, phrase loops, and pronunciation guides."
+requires-python = ">=3.12"
+authors = [{ name = "SuperJuice666" }]
+license = "MIT"
+
+[project.urls]
+Repository = "https://github.com/SuperJuice666/sorane-player"
+Issues = "https://github.com/SuperJuice666/sorane-player/issues"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+include = ["server/**/*.py", "lyric_player/**/*.py", "tests/**/*.py", "pyproject.toml"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.format]
+quote-style = "double"

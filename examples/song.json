@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "demo",
+  "title": "音の練習",
+  "artist": "Demo",
+  "duration": 24,
+  "audio": {
+    "1": {
+      "src": "tone-1.wav"
+    },
+    "0.75": {
+      "src": "tone-0.75.wav"
+    },
+    "0.5": {
+      "src": "tone-0.5.wav"
+    }
+  },
+  "lines": [
+    {
+      "id": "1",
+      "jp": "朝の光",
+      "section": "練習 1",
+      "start": 1,
+      "end": 4.8,
+      "tokens": [
+        {
+          "jp": "朝",
+          "kana": "あさ",
+          "romaji": "asa",
+          "start": 1.0,
+          "end": 2.0
+        },
+        {
+          "jp": "の",
+          "kana": "の",
+          "romaji": "no",
+          "start": 2.4,
+          "end": 3.4
+        },
+        {
+          "jp": "光",
+          "kana": "ひかり",
+          "romaji": "hikari",
+          "start": 3.8,
+          "end": 4.8
+        }
+      ]
+    }
+  ]
+}

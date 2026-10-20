@@ -1,0 +1,6 @@
+FROM python:3.13-slim
+WORKDIR /app
+COPY server ./server
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+USER 10001:10001
+CMD ["python", "-m", "server"]

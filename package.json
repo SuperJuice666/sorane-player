@@ -1,0 +1,31 @@
+{
+  "name": "sorane-player",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "format": "prettier --write web tests docs examples README.md package.json compose.yaml .github eslint.config.js",
+    "format:check": "prettier --check web tests docs examples README.md package.json compose.yaml .github eslint.config.js",
+    "lint": "eslint web/src"
+  },
+  "devDependencies": {
+    "eslint": "10.13.0",
+    "globals": "17.13.0",
+    "prettier": "3.6.2"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "description": "Practice Japanese songs with synchronized lyrics, phrase loops, and pronunciation guides.",
+  "author": "SuperJuice666",
+  "license": "MIT",
+  "homepage": "https://github.com/SuperJuice666/sorane-player",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuperJuice666/sorane-player.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SuperJuice666/sorane-player/issues"
+  }
+}

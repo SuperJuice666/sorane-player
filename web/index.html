@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fafaf8" />
+    <title>Sorane Player · 歌词练习</title>
+    <link rel="stylesheet" href="fonts/serif-jp.css" />
+    <link rel="stylesheet" href="styles/app.css" />
+    <link rel="stylesheet" href="styles/library.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="title-row">
+        <h1 class="song-title">
+          <button
+            id="open-songs"
+            class="song-picker-trigger"
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="song-picker"
+          >
+            <span id="song-picker-label">选择歌曲</span
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg></button
+          ><select
+            id="song-select"
+            aria-label="选择歌曲"
+            hidden
+            aria-hidden="true"
+            tabindex="-1"
+          ></select>
+        </h1>
+        <button
+          id="open-lyrics"
+          class="lyrics-trigger"
+          type="button"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="lyric-drawer"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1" /></svg
+          >歌词
+        </button>
+      </div>
+    </header>
+    <dialog id="song-picker" class="catalog-sheet" aria-labelledby="catalog-title">
+      <header class="catalog-head">
+        <h2 id="catalog-title">选择歌曲</h2>
+        <button
+          id="close-songs"
+          class="catalog-close"
+          type="button"
+          aria-label="关闭歌曲选择器"
+        ></button>
+      </header>
+      <nav class="catalog-tabs" aria-label="歌曲分类">
+        <button type="button" data-catalog-tab="favorites" aria-selected="true">收藏</button
+        ><button type="button" data-catalog-tab="library" aria-selected="false">全部歌曲</button>
+      </nav>
+      <div id="catalog-library" class="catalog-view">
+        <div class="catalog-search">
+          <input
+            id="catalog-query"
+            type="search"
+            placeholder="搜索曲名、歌手"
+            aria-label="搜索站内歌曲"
+            autocomplete="off"
+          />
+        </div>
+        <div id="catalog-library-list" class="catalog-scroll"></div>
+      </div>
+      <p id="catalog-status" class="catalog-status" aria-live="polite"></p>
+    </dialog>
+    <main class="layout">
+      <dialog id="lyric-drawer" class="lyrics-sheet" tabindex="-1" aria-labelledby="lyrics-title">
+        <header class="lyrics-sheet-head">
+          <h2 id="lyrics-title">歌词目录</h2>
+          <span id="line-total" class="count">0 句</span
+          ><button id="close-lyrics" type="button" aria-label="关闭歌词目录">×</button>
+        </header>
+        <div class="lyrics-sheet-content">
+          <div id="section-panel" class="directory-range" aria-label="选段范围" hidden>
+            <div class="range-guidance">
+              <span id="range-instruction" aria-live="polite">点起始句，再点结束句</span
+              ><button id="choose-section" type="button">重选</button>
+            </div>
+            <div id="section-summary" class="section-summary" aria-live="polite"></div>
+          </div>
+          <nav id="lyric-list" aria-label="歌词句子列表"></nav>
+        </div>
+      </dialog>
+      <section class="workspace">
+        <div id="selection-empty" class="selection-empty">
+          <button id="choose-lyrics" type="button">选择歌词</button>
+          <p id="selection-caption">从右上角歌词选择练习句</p>
+        </div>
+        <article id="lesson" hidden class="lesson" aria-label="当前歌词练习">
+          <div class="lesson-top">
+            <div class="section-meta">
+              <span id="current-section" class="section-tag">开篇</span
+              ><span class="source-time" id="source-time"></span>
+            </div>
+            <span id="sentence-number" class="sentence-number">00 / 00</span>
+          </div>
+          <div id="tokens" class="tokens" lang="ja"></div>
+          <p id="instrumental" class="translation" hidden>间奏</p>
+          <p id="translation" class="translation" lang="zh-CN" hidden></p>
+          <div id="next-line" class="next-line" aria-label="下一句歌词">
+            <span class="next-caption">下一句</span>
+            <div id="next-tokens" class="next-tokens" lang="ja"></div>
+          </div>
+        </article>
+      </section>
+    </main>
+    <section id="player" class="player" aria-label="音频播放器">
+      <div class="practice-options" id="practice-options">
+        <label><input id="next-line-toggle" type="checkbox" checked />显示下句</label
+        ><label title="至少8个字母且5拍的读音分拍，短词保持连写；· 表示促音停顿一拍"
+          ><input id="mora-toggle" type="checkbox" checked />长词分拍</label
+        ><label><input id="kana-toggle" type="checkbox" />汉字假名</label
+        ><label><input id="translation-toggle" type="checkbox" />中文译文</label>
+      </div>
+      <div class="scope-switch" role="group" aria-label="播放模式">
+        <button id="scope-line" type="button" aria-pressed="true">逐句练习</button
+        ><button id="scope-section" type="button" aria-pressed="false">逐段练习</button
+        ><button id="scope-full" type="button" aria-pressed="false">全曲模式</button>
+      </div>
+
+      <div class="player-top">
+        <div id="audio-type" class="mode-tabs" role="tablist" aria-label="练习音频">
+          <button id="mode-song" class="active" role="tab" aria-selected="true">原曲</button
+          ><button id="mode-read" role="tab" aria-selected="false">读音</button>
+        </div>
+        <div class="speed-row">
+          <div id="read-speeds" class="speed-buttons" role="group" aria-label="朗读语速">
+            <button data-read-speed="verySlow" class="selected">很慢</button
+            ><button data-read-speed="slow">慢速</button
+            ><button data-read-speed="normal">正常</button>
+          </div>
+          <div id="song-speeds" class="speed-buttons" role="group" aria-label="原曲倍速" hidden>
+            <button data-song-speed="0.5">0.5×</button><button data-song-speed="0.75">0.75×</button
+            ><button data-song-speed="1" class="selected">1×</button>
+          </div>
+        </div>
+      </div>
+      <div class="vocal-control" id="vocal-control">
+        <label for="vocal-volume">人声</label
+        ><input
+          id="vocal-volume"
+          type="range"
+          min="0"
+          max="100"
+          value="100"
+          step="5"
+          aria-label="人声音量"
+        /><output id="vocal-value" for="vocal-volume">100%</output>
+      </div>
+      <div class="progress-row">
+        <span id="elapsed">00:00</span
+        ><input
+          id="progress"
+          type="range"
+          min="0"
+          max="1000"
+          value="0"
+          aria-label="播放进度"
+        /><span id="duration">--:--</span>
+      </div>
+
+      <div class="transport">
+        <button id="prev" class="round-button" aria-label="上一句" title="上一句">‹</button
+        ><button id="play" class="play-button" aria-label="播放当前句">
+          <svg
+            id="play-icon"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path class="icon-play" d="m9 5 11 7-11 7Z" fill="currentColor" stroke="none" />
+            <g class="icon-pause"><path d="M8 5v14M16 5v14" stroke-width="3" /></g>
+            <g class="icon-loading">
+              <circle cx="12" cy="12" r="8" opacity=".25" />
+              <path d="M12 4a8 8 0 0 1 8 8" />
+            </g>
+            <path class="icon-retry" d="M20 10a8 8 0 1 0-2 8M20 4v6h-6" /></svg
+          ><span id="play-label">播放</span></button
+        ><button id="next" class="round-button" aria-label="下一句" title="下一句">›</button
+        ><button
+          id="restart"
+          class="restart"
+          type="button"
+          aria-label="重播当前句"
+          title="重播当前句"
+        >
+          ↺
+        </button>
+      </div>
+      <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+    </section>
+    <audio id="audio" preload="metadata" playsinline></audio>
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
